@@ -1,0 +1,205 @@
+# 1.a
+# You have to find all the values of the locations which are countries. For this, you will first have to find URI of
+# the Country concept in the knowledge base.
+
+SELECT
+    ?c
+WHERE {
+    ?c rdf:type <http://dbpedia.org/ontology/Country> .
+}
+
+# :Akkadian_Empire [http]
+# :Almoravid_dynasty [http]
+# :Ammon [http]
+# :Antigonid_dynasty [http]
+# :Archbishopric_of_Riga [http]
+# ...
+
+# 1.b
+# You have to find all the values of the people who are politicians. For this, you will first have to find the URI of
+# the Politician concept in the knowledge base.
+
+SELECT
+    str(?p)
+WHERE {
+    ?p rdf:type <http://dbpedia.org/ontology/Politician> .
+}
+
+# "http://dbpedia.org/resource/Blake_Richards"
+# "http://dbpedia.org/resource/Cicero"
+# "http://dbpedia.org/resource/David_Charles_(Australian_politician)"
+# "http://dbpedia.org/resource/Dean_Martin_(politician)"
+# ...
+
+# 1.c
+# You have to find all the values of the organizations which are companies. For this, you will first have to find URI
+# of the Company concept in the knowledge base.
+
+SELECT
+    ?p
+WHERE {
+    ?p rdf:type <http://dbpedia.org/ontology/Company> .
+}
+
+# :Airbus_Helicopters [http]
+# :Daimler_AG [http]
+# :Dassault_Aviation [http]
+# :Maxwell_Technologies [http]
+# ...
+
+# 2.a
+# You have to find all the concepts that are sub-concepts of the concept Person. For this, you will have to use the
+# specific property that exists between the concepts.
+
+SELECT
+	?class
+WHERE {
+	?class rdfs:subClassOf <http://dbpedia.org/ontology/Person> .
+}
+
+# dbpedia:ontology/Ambassador [http]
+# dbpedia:ontology/Archeologist [http]
+# dbpedia:ontology/Architect [http]
+# dbpedia:ontology/Aristocrat [http]
+# dbpedia:ontology/Artist [http]
+# ...
+
+# 2.b
+# You have to find all the properties which belongs to the domain of the concept Person. All the retrieved properties
+# can be used to describe a person. 
+
+SELECT
+	DISTINCT ?property
+WHERE {
+	?p rdf:type <http://dbpedia.org/ontology/Person> .
+	?p ?property ?p2
+}
+
+# rdf:type [http]
+# rdfs:label [http]
+# rdfs:comment [http]
+# rdfs:seeAlso [http]
+# owl:sameAs [http]
+# dbpedia2:hometown [http]
+# ...
+
+# 2.c
+# You have to find all the properties which belongs to the domain of the concept Company. All the retrieved properties
+# can be used to describe a company. For this, you can just adapt the previous query (b) to the concept Company.
+
+SELECT
+	DISTINCT ?property
+WHERE {
+	?p rdf:type <http://dbpedia.org/ontology/Company> .
+	?p ?property ?p2 .
+}
+
+# rdf:type [http]
+# rdfs:label [http]
+# rdfs:comment [http]
+# rdfs:seeAlso [http]
+# owl:sameAs [http]
+# <http://www.w3.org/ns/prov#wasDerivedFrom> [http]
+# dbpedia:ontology/abstract [http]
+# dbpedia:ontology/alliance [http]
+# dbpedia:ontology/assets [http]
+# ...
+
+# 2.d
+# You have to find the property of the concept “Company” that refers to the industry that the company belongs to
+
+SELECT
+	?company, ?p, ?c
+WHERE {
+	?company rdf:type <http://dbpedia.org/ontology/Company> .
+	?company ?p ?c .
+	FILTER regex(str(?p), "industry", "i") .
+}
+
+# :Airbus_Helicopters [http] dbpedia:ontology/industry [http] :Aerospace_manufacturer [http]
+# :Daimler_AG         [http] dbpedia:ontology/industry [http] :Automotive_industry [http]
+# :Dassault_Aviation  [http] dbpedia:ontology/industry [http] :Aerospace_engineering [http]
+# :Dassault_Aviation  [http] dbpedia:ontology/industry [http] :Military [http]
+
+# 2.e
+# You have to find the Company that is called “IBM”. Also based on regular expression, you can search for the
+# specific instance that contains the word “IBM”.
+
+SELECT
+	?company, ?name
+WHERE {
+	?company rdf:type <http://dbpedia.org/ontology/Company> .
+	?company foaf:name ?name .
+	FILTER regex(str(?name), "IBM") .
+}
+
+# :IBM_Toronto_Software_Lab [http] "IBM Toronto Software Lab"@en
+# :Unyte                    [http] "IBM Lotus Sametime Unyte"@en
+# :Kenexa                   [http] "Kenexa, an IBM Company"@en
+
+# 3.a
+# Create the SPARQL query to find all the companies that have the United States listed as location and that
+# work in the Media industry . In the results, you should display the Company name, the industry and the location.  
+
+# PREFIX dbo: <http://dbpedia.org/ontology>
+# PREFIX dbpedia: <http://dbpedia.org/resource>
+
+SELECT
+	DISTINCT ?company, ?typeind, ?typeloc
+WHERE {
+	?company rdf:type dbo:Company .
+	?company ?industry ?typeind .
+	FILTER regex(str(?industry), "industry", "i") .
+	FILTER regex(str(?typeind), "media", "i") .
+	?company ?location ?typeloc .
+	FILTER regex(str(?location), "location", "i") .
+	FILTER regex(str(?typeloc), "united states", "i") .
+}
+# :Kenneth_Mitchell_(politician) [http]
+# :Bill_Clinton [http]
+# :Gérard_Ouellet [http]
+# ...
+
+# 3.b
+SELECT
+	DISTINCT ?company, ?typeind, ?num
+WHERE {
+	?company rdf:type dbo:Company .
+	?company ?industry ?typeind .
+	FILTER regex(str(?industry), "industry", "i") .
+	FILTER regex(str(?typeind), "automotive_industry", "i") .
+	?company ?numEmployees ?num .
+	FILTER regex(str(?numEmployees), "numberOfEmployees", "i") .
+}
+ORDER BY DESC (?num)
+# :Volkswagen [http]	:Automotive_industry [http]	588902
+# :Volkswagen_Group [http]	:Automotive_industry [http]	588902
+# :Toyota [http]	:Automotive_industry [http]	344109
+# :Daimler_AG [http]	:Automotive_industry [http]	279972
+# ...
+
+# 3.c
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+SELECT ?thing WHERE { 
+   ?thing a dbo:Politician .
+   ?thing dbo:birthPlace dbpedia:United_States.
+}
+
+# :Kenneth_Mitchell_(politician) [http]
+# :Bill_Clinton [http]
+# :Gérard_Ouellet [http]
+# ...
+
+# 3.d
+PREFIX o: <http://dbpedia.org/ontology/>
+PREFIX p: <http://dbpedia.org/property/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+SELECT ?name ?pop WHERE {
+    ?country a o:Country ;
+        foaf:name ?name ;
+             p:populationEstimate ?pop .
+             FILTER (?pop >= 10000000) .
+}
+

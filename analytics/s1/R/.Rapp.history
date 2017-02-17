@@ -1,0 +1,11 @@
+library(qualityTools)#
+x <- c(7.80, 12.60, 13.50, 8.25, 31.29, 16.46)#
+length(x)#
+dotPlot(x, pch=20, main="prices of a 3room apart in lEixample")
+summary(x)
+sd(x)
+boxplot(x)
+boxplot(x, main="Precios de pisos de 3 habitacion")
+boxplot(x, main="Precios de pisos de 3 habitacion", ylab="Precio")
+boxplot(x, main="Precios de pisos de 3 habitacion", ylab="Precio", xlab="Muestras")
+boxplot(x, main="Precios de pisos de 3 habitacion", ylab="Precio")
