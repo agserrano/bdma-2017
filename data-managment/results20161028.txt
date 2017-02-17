@@ -1,0 +1,98 @@
+1.
+(a)
+real  0m26.082s
+user  0m11.317s
+sys  0m3.339s
+
+(b)
+ Total size:  1081969162 B
+ Total dirs:  0
+ Total files:  1
+ Total symlinks:    0
+ Total blocks (validated):  9 (avg. block size 120218795 B)
+ Minimally replicated blocks:  9 (100.0 %)
+ Over-replicated blocks:  0 (0.0 %)
+ Under-replicated blocks:  0 (0.0 %)
+ Mis-replicated blocks:    0 (0.0 %)
+ Default replication factor:  3
+ Average block replication:  1.0
+ Corrupt blocks:    0
+ Missing replicas:    0 (0.0 %)
+ Number of data-nodes:    2
+ Number of racks:    1
+FSCK ended at Fri Oct 28 20:07:04 CEST 2016 in 6 milliseconds
+
+(c)
+bdma10@slave1:~$ du -shx data/
+388M  data/
+
+bdma10@slave2:~$ du -shx data/
+653M  data/
+
+2.
+(a)
+real  0m38.739s
+user  0m13.332s
+sys  0m3.600s
+
+bdma10@slave1:~$ du -shx data/
+1.1G  data/
+
+bdma10@slave2:~$ du -shx data/
+1.1G  data/
+
+data has a higher replication index so more data is stored in the different nodes. Since the index is the same as the
+numer of nodes, the whole file it's been stored in each node
+
+3.
+(a)
+With even a higher replication index more data will be stored in each node. Given we only have 2 slaves doesn't actually
+make sense to have a higher number than 2
+
+(b)
+real  0m32.865s
+user  0m12.697s
+sys  0m3.593s
+
+/user/bdma10/wines.txt:  Under replicated BP-1594491041-10.0.0.10-1477675345043:blk_1073741860_1036. Target Replicas is 3 but found 2 replica(s).
+Status: HEALTHY
+ Total size:  1081969162 B
+ Total dirs:  0
+ Total files:  1
+ Total symlinks:    0
+ Total blocks (validated):  9 (avg. block size 120218795 B)
+ Minimally replicated blocks:  9 (100.0 %)
+ Over-replicated blocks:  0 (0.0 %)
+ Under-replicated blocks:  9 (100.0 %)
+ Mis-replicated blocks:    0 (0.0 %)
+ Default replication factor:  3
+ Average block replication:  2.0
+ Corrupt blocks:    0
+ Missing replicas:    9 (33.333332 %)
+ Number of data-nodes:    2
+ Number of racks:    1
+FSCK ended at Fri Oct 28 20:16:05 CEST 2016 in 3 milliseconds
+
+bdma10@slave1:~$ du -shx data/
+1.1G  data/
+
+bdma10@slave2:~$ du -shx data/
+1.1G  data/
+
+(c) it is actually normal what it's showing, because we don't have enough nodes to replicate as many times as
+we tell hadoop to do
+
+5.1
+always real times
+SIZE  |INSERTION TIME|READING TIME|BLOCKS
+2MB   |0m56.161s     |0m22.789s   |516 (avg. block size 2096839 B)
+8MB   |0m50.454s     |0m21.818s   |129 (avg. block size 8387357 B)
+32MB  |0m41.478s     |0m22.071s   |33 (avg. block size 32786944 B)
+128MB |0m44.714s     |0m22.946s   |9 (avg. block size 120218795 B)
+512MB |0m40.754s     |0m19.121s   |3 (avg. block size 360656387 B)
+2GB   |error, since the suggested blocksize is bigger than the actual file
+
+-The number of blocks is the number of chuncks with that size that the file can be devided. Yes, it makes sense.
+-The same, less blocks has to write the faster it goes.
+-Depends a bit of the resources available in the data nodes. But in any case we would have more space to find the optimal
+configuration. Most probably increasing the default size would be very good idea.
