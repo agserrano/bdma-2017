@@ -531,60 +531,247 @@ table(Longitudinal.pos2)
 
 
 
+
+
+
 yatch <- read.table(url("http://archive.ics.uci.edu/ml/machine-learning-databases/00243/yacht_hydrodynamics.data"), 
                     header=FALSE,
                     col.names = c("Longitudinal.pos","Prismatic.coeff","Length.displ","Beam.draught
                                   ","Length.beam","Froude.No", "Resistance"))
+summary(yatch)
 library(lattice) 
-xyplot(yatch$"Longitudinal.pos" ~ yatch$"Froude.No", data = yatch,
-       xlab = "Froude number",
+xyplot(yatch$"Longitudinal.pos" ~ yatch$"Resistance", data = yatch,
+       xlab = "Resistance",
        ylab = "Longitudinal position of the center of buoyancy",
        main = "Yacht Hydrodynamics Data Set. Longitudinal.pos Vs Froude.No"
 )
-# linear regression
-alli.mod1 = lm(yatch$"Longitudinal.pos" ~ yatch$"Froude.No", data = yatch)
-summary(alli.mod1)
-# la regresi??n linear nos deber??a mostrar si hay relaci??n entre la variable que queremos predecir, Froude.No,
-# y la variable Longitudinal.pos. Al obtener un coeficiente de 1.459e-15 cercano a 0 (que vendr??a a ser la pendiente de la
-# regresi??n linear) nos dice que no, no hay relaci??n. Como era de esperar al ver el plot.
-xyplot(resid(alli.mod1) ~ fitted(alli.mod1),
-       xlab = "Fitted Values",
-       ylab = "Residuals",
-       main = "Residual Diagnostic Plot",
-       panel = function(x, y, ...)
-       {
-         panel.grid(h = -1, v = -1)
-         panel.abline(h = 0)
-         panel.xyplot(x, y, ...)
-       }
-)
-qqmath( ~ resid(alli.mod1),
-        xlab = "Theoretical Quantiles",
-        ylab = "Residuals"
-)
 
+attach(yatch)
+N <- nrow(yatch)
+# 308 lines
+(modelY <- lm(Resistance ~ ., data = yatch))
+summary(modelY)
 
-# Para el resto de variables
-xyplot(yatch$"Prismatic.coeff" ~ yatch$"Froude.No", data = yatch,
-       xlab = "Froude number",
-       ylab = "Prismatic coefficient",
-       main = "Yacht Hydrodynamics Data Set. Prismatic.coeff Vs Froude.No"
-)
-xyplot(yatch$"Length.displ" ~ yatch$"Froude.No", data = yatch,
-       xlab = "Froude number",
-       ylab = "Length-displacement ratio",
-       main = "Yacht Hydrodynamics Data Set. Length.displ Vs Froude.No"
-)
-xyplot(yatch$"Beam.draught" ~ yatch$"Froude.No", data = yatch,
-       xlab = "Froude number",
-       ylab = "Beam-draught ratio",
-       main = "Yacht Hydrodynamics Data Set. Beam.draught Vs Froude.No"
-)
-xyplot(yatch$"Length.beam" ~ yatch$"Froude.No", data = yatch,
-       xlab = "Froude number",
-       ylab = "Length-beam ratio",
-       main = "Yacht Hydrodynamics Data Set. Length.beam Vs Froude.No"
-)
+# inspeccionamos el modelo
+densY <- density(modelY$residuals)
+hist(modelY$residuals, prob=T)
+lines(densY,col="red")
+# la linea no parecen gausinas, tiene tres maximos locales
+# la regresion linear nos deberia mostrar si hay relacion entre la variable que queremos predecir, Resistance,
+# y el resto de variables. El grafico nos dice que no, no hay relacion. Como era de esperar al ver el plot.
+
+library(car)
+qqPlot(modelY)
+
+prediction <- predict(modelY)
+(mean.square.error <- sum((yatch - prediction)^2)/N)
+# [1] 1479.289
+# la media del error cuadratico es muy grande, dado que el resto de valores oscilan en cualquier case por menos de centenas
+
+(norm.root.mse <- sqrt(sum((Resistance - prediction)^2)/((N-1)*var(Resistance))))
+# [1] 0.5851805
+# el error cuadratico normalizado 
+
+plot(Resistance, predict(modelY))
+
+(LOOCV <- sum((modelY$residuals/(1-ls.diag(modelY)$hat))^2)/N)
+# [1] 82.5794
+(R2.LOOCV = 1 - LOOCV*N/((N-1)*var(Resistance)))
+# [1] 0.6395396
+(norm.root.mse.LOOCV <- sqrt( (LOOCV*N)/((N-1)*var(Resistance)) ))
+# [1] 0.6003836
+lambdas <- 10^seq(-6,2,0.1)
 summary(yatch)
+select(lm.ridge(Resistance ~ Longitudinal.pos + Prismatic.coeff + Length.displ + Beam.draught................................... + Length.beam + Froude.No, lambda = lambdas))
+# modified HKB estimator is 2.088049 
+# modified L-W estimator is 2.131503 
+# smallest value of GCV  at 6.309573
+
+lambdas <- seq(0,1,0.001)
+select(lm.ridge(Resistance ~ Longitudinal.pos + Prismatic.coeff + Length.displ + Beam.draught................................... + Length.beam + Froude.No, lambda = lambdas))
+# modified HKB estimator is 2.088049 
+# modified L-W estimator is 2.131503 
+# smallest value of GCV  at 1 
+
+(yatch.ridge.reg <- lm.ridge(Resistance ~ Longitudinal.pos + Prismatic.coeff + Length.displ + Beam.draught................................... + Length.beam + Froude.No, lambda = 1))
+
+X <- cbind(rep(1,length=length(Resistance)), Longitudinal.pos, Prismatic.coeff, Length.displ, Beam.draught..................................., Length.beam, Froude.No)
+
+(w <- ginv(X) %*% Resistance)
+#               [,1]
+# [1,] -19.2366608
+# [2,]   0.1938443
+# [3,]  -6.4193759
+# [4,]   4.2329986
+# [5,]  -1.7656948
+# [6,]  -4.5164318
+# [7,] 121.6675724
+
+modelY$coefficients
+
+norm.root.mse.LOOCV
+# [1] 0.6003836
+sqrt(yatch.ridge.reg$GCV)
+# 0.5141868
+
+# y la version escalada???
+scaled.Yatch <- scale(yatch)
+head(scaled.Yatch)
+
+# con el log
+yatch$ResistanceLog <- log10(yatch[,"Resistance"])
+attach(yatch)
+summary(yatch)
+yatch$Resistance <- NULL
+(modelY <- lm(ResistanceLog ~ ., data = yatch))
+summary(modelY)
+densY <- density(modelY$residuals)
+hist(modelY$residuals, prob=T)
+lines(densY,col="red")
 
 
+hist (log10(yatch[,"Resistance"]),xlab="Resistance") 
+boxplot (log10(yatch[,"Resistance"]),xlab="Resistance")
+
+
+
+## LASSO
+yatch <- read.table(url("http://archive.ics.uci.edu/ml/machine-learning-databases/00243/yacht_hydrodynamics.data"), 
+                    header=FALSE,
+                    col.names = c("Longitudinal.pos","Prismatic.coeff","Length.displ","Beam.draught","Length.beam","Froude.No", "Resistance"))
+#install.packages("lars")
+library(lars)
+
+yatch$ResistanceLog <- log10(yatch[,"Resistance"])
+yatch$Resistance <- NULL
+summary(yatch)
+t <- as.numeric(yatch$"Resistance") # target
+x <- as.matrix(yatch[,1:6]) 
+# we draw the model
+model.lasso <- lars(x, t, type="lasso")
+
+plot(model.lasso)
+
+lambda.lasso <- c(model.lasso$lambda,0)
+
+beta.lasso <- coef(model.lasso)
+
+colors <- rainbow(3)
+
+beta.scale <- attr(model.lasso$beta, "scaled:scale")
+beta.rescaled <- beta.lasso
+for(j in 1:3) beta.rescaled[j,] <- beta.rescaled[j,]*beta.scale
+
+matplot(lambda.lasso, beta.rescaled, xlim=c(8,-2), type="o", pch=20, xlab=expression(lambda), 
+        ylab=expression(hat(beta.lasso)), col=colors)
+text(rep(-0, 9), beta.rescaled[3,], colnames(x), pos=4, col=colors)
+
+# that should give us an idea of which variables can be left out
+abline(v=lambda.lasso[3], lty=2)
+abline(h=0, lty=2)
+(beta.lasso <- beta.lasso[3,])
+
+?glmnet
+X <- x
+y <- t
+fit <-glmnet(x = X, y = y, alpha = 1)
+plot(fit, xvar = "lambda", label = TRUE)
+coef(fit, s=0.1)
+
+crossval <-  cv.glmnet(x = X, y = y)
+summary(crossval)
+plot(crossval)
+penalty <- crossval$lambda.min #optimal lambda
+penalty #minimal shrinkage
+fit1 <-glmnet(x = X, y = y, alpha = 1, lambda = penalty ) #estimate the model with that
+coef(fit1)
+
+cv.lasso <- cv.glmnet(x, y, alpha=1,  nfolds =5, parallel=TRUE, standardize=TRUE)
+plot(cv.lasso)
+plot(cv.lasso$glmnet.fit, xvar="lambda", label=TRUE)
+cv.lasso$lambda.min #0.6855139
+cv.lasso$lambda.1se #2.767432
+
+N <- nrow(yatch)
+yatch_training <- yatch[1:200,]
+yatch_test <- yatch[201:N,]
+nrow(yatch_training)
+nrow(yatch_test)
+
+
+
+
+
+
+yatch <- read.table(url("http://archive.ics.uci.edu/ml/machine-learning-databases/00243/yacht_hydrodynamics.data"), 
+                    header=FALSE,
+                    col.names = c("Longitudinal.pos","Prismatic.coeff","Length.displ","Beam.draught","Length.beam","Froude.No", "Resistance"))
+set.seed(101)
+yatch$ResistanceLog <- log10(yatch[,"Resistance"])
+yatch$Resistance <- NULL
+sample <- sample.int(nrow(yatch), floor(.75*nrow(yatch)), replace = F)
+train <- yatch[sample, ]
+test <- yatch[-sample, ]
+nrow(train)
+nrow(test)
+
+t <- as.numeric(train$ResistanceLog) # target
+x <- as.matrix(train[,1:6]) # predictors
+model.lasso <- lars(x, t, type="lasso")
+plot(model.lasso)
+
+model.lasso$lambda
+# Primero Calculamos las predicciones del modelo con la tercera lambda 0.30993387
+(predictions <- predict(model.lasso,
+                        test[,c("Longitudinal.pos","Prismatic.coeff","Length.displ","Beam.draught","Length.beam","Froude.No")],
+                        s=0.007, type="fit",
+                        mode="lambda")$fit)
+
+#Calculamos RMSE
+(rmse <- sqrt(mean((test[,c("ResistanceLog")] - predictions)^2)))
+
+#O sea, las diferencias entre datos observados y modelo al cuadrado
+#sumadas y divididas entre n (o sea, su media) con raiz cuadrada para
+#hacer el Root del Mean Square Error.
+#Normalizamos con la desviaci??n standard.
+(nrmse <- rmse/sd(test[,c("ResistanceLog")]))
+
+# error 0.1731307
+
+
+lambda.lasso <- c(model.lasso$lambda,0)
+beta.lasso <- coef(model.lasso)
+colors <- rainbow(3)
+beta.scale <- attr(model.lasso$beta, "scaled:scale")
+beta.rescaled <- beta.lasso
+for(j in 1:3) beta.rescaled[j,] <- beta.rescaled[j,]*beta.scale
+
+matplot(lambda.lasso, beta.rescaled, xlim=c(8,-2), type="o", pch=20, xlab=expression(lambda), 
+        ylab=expression(hat(beta.lasso)), col=colors)
+text(rep(-0, 9), beta.rescaled[3,], colnames(x), pos=4, col=colors)
+
+min(model.lasso$lambda)
+
+
+# RIDGE
+library(car)
+yatch <- read.table(url("http://archive.ics.uci.edu/ml/machine-learning-databases/00243/yacht_hydrodynamics.data"), 
+                    header=FALSE,
+                    col.names = c("Longitudinal.pos","Prismatic.coeff","Length.displ","Beam.draught","Length.beam","Froude.No", "Resistance"))
+set.seed(101)
+yatch$ResistanceLog <- log10(yatch[,"Resistance"])
+yatch$Resistance <- NULL
+sample <- sample.int(nrow(yatch), floor(.75*nrow(yatch)), replace = F)
+train <- yatch[sample, ]
+test <- yatch[-sample, ]
+nrow(train)
+nrow(test)
+lambdes <- seq(0.001,0.5,0.001)
+model <- glm (train$Resistance ~ train$Longitudinal.pos + train$Prismatic.coeff + train$Length.displ + train$Beam.draught + train$Length.beam + train$Froude.No, data=train, family=gaussian)
+model.ridge <- lm.ridge (model, lambda = lambdes)
+select( lm.ridge(model, lambda = lambdes) )
+model.final <- lm.ridge (model,lambda=0.05)
+coef(model)
+coef(model.final)
+prediccions.classic <- predict (model, newdata=train)
+(NRMSE.VA.classic <- sqrt(sum((valid.sample$target - prediccions.classic)^2)/((N.valid-1)*var(valid.sample$target))))
