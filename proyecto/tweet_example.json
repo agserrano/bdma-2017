@@ -1,0 +1,239 @@
+{
+  "_id": ObjectId(
+  "58a818597befb8ff244c3aa4"
+  ),
+  "x": {
+    "contributors": null,
+    "truncated": false,
+    "text": "RT @volemacollir: Imatge històrica: #VolemAcollir a les dues bandes de la plaça de Sant Jaume, Generalitat i Ajuntament de Barcelona. Demà…",
+    "is_quote_status": false,
+    "in_reply_to_status_id": null,
+    "id": NumberLong(
+    "832642091486429188"
+    ),
+    "favorite_count": 0,
+    "entities": {
+      "symbols": [],
+      "user_mentions": [
+        {
+          "id": NumberLong(
+          "779633930911834112"
+          ),
+          "indices": [
+            3,
+            16
+          ],
+          "id_str": "779633930911834112",
+          "screen_name": "volemacollir",
+          "name": "CasaNostraCasaVostra"
+        }
+      ],
+      "hashtags": [
+        {
+          "indices": [
+            36,
+            49
+          ],
+          "text": "VolemAcollir"
+        }
+      ],
+      "urls": []
+    },
+    "retweeted": false,
+    "coordinates": null,
+    "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+    "in_reply_to_screen_name": null,
+    "in_reply_to_user_id": null,
+    "retweet_count": 205,
+    "id_str": "832642091486429188",
+    "favorited": false,
+    "retweeted_status": {
+      "contributors": null,
+      "truncated": true,
+      "text": "Imatge històrica: #VolemAcollir a les dues bandes de la plaça de Sant Jaume, Generalitat i Ajuntament de Barcelona.… https://t.co/51qheJKEUB",
+      "is_quote_status": false,
+      "in_reply_to_status_id": null,
+      "id": NumberLong(
+      "832634839211900928"
+      ),
+      "favorite_count": 200,
+      "entities": {
+        "symbols": [],
+        "user_mentions": [],
+        "hashtags": [
+          {
+            "indices": [
+              18,
+              31
+            ],
+            "text": "VolemAcollir"
+          }
+        ],
+        "urls": [
+          {
+            "url": "https://t.co/51qheJKEUB",
+            "indices": [
+              117,
+              140
+            ],
+            "expanded_url": "https://twitter.com/i/web/status/832634839211900928",
+            "display_url": "twitter.com/i/web/status/8…"
+          }
+        ]
+      },
+      "retweeted": false,
+      "coordinates": null,
+      "source": "<a href=\"http://twitter.com\" rel=\"nofollow\">Twitter Web Client</a>",
+      "in_reply_to_screen_name": null,
+      "in_reply_to_user_id": null,
+      "retweet_count": 205,
+      "id_str": "832634839211900928",
+      "favorited": false,
+      "user": {
+        "follow_request_sent": false,
+        "has_extended_profile": false,
+        "profile_use_background_image": true,
+        "default_profile_image": false,
+        "id": NumberLong(
+        "779633930911834112"
+        ),
+        "profile_background_image_url_https": null,
+        "verified": false,
+        "translator_type": "none",
+        "profile_text_color": "333333",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/798660182276534272/R0PWjj2W_normal.jpg",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "entities": {
+          "url": {
+            "urls": [
+              {
+                "url": "https://t.co/bPgxHv4JFj",
+                "indices": [
+                  0,
+                  23
+                ],
+                "expanded_url": "http://www.casanostracasavostra.cat",
+                "display_url": "casanostracasavostra.cat"
+              }
+            ]
+          },
+          "description": {
+            "urls": []
+          }
+        },
+        "followers_count": 8481,
+        "profile_sidebar_border_color": "C0DEED",
+        "id_str": "779633930911834112",
+        "profile_background_color": "F5F8FA",
+        "listed_count": 56,
+        "is_translation_enabled": false,
+        "utc_offset": 3600,
+        "statuses_count": 2183,
+        "description": "El 18F cridarem ben fort que #volemacollir. Hem de ser-hi tots, hem de ser-hi ara!",
+        "friends_count": 58,
+        "location": "Catalunya",
+        "profile_link_color": "1DA1F2",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/798660182276534272/R0PWjj2W_normal.jpg",
+        "following": false,
+        "geo_enabled": true,
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/779633930911834112/1485353006",
+        "profile_background_image_url": null,
+        "screen_name": "volemacollir",
+        "lang": "ca",
+        "profile_background_tile": false,
+        "favourites_count": 1076,
+        "name": "CasaNostraCasaVostra",
+        "notifications": false,
+        "url": "https://t.co/bPgxHv4JFj",
+        "created_at": "Sat Sep 24 10:49:48 +0000 2016",
+        "contributors_enabled": false,
+        "time_zone": "Madrid",
+        "protected": false,
+        "default_profile": true,
+        "is_translator": false
+      },
+      "geo": null,
+      "in_reply_to_user_id_str": null,
+      "possibly_sensitive": false,
+      "lang": "und",
+      "created_at": "Fri Feb 17 16:56:29 +0000 2017",
+      "in_reply_to_status_id_str": null,
+      "place": null,
+      "metadata": {
+        "iso_language_code": "und",
+        "result_type": "recent"
+      }
+    },
+    "user": {
+      "follow_request_sent": false,
+      "has_extended_profile": false,
+      "profile_use_background_image": false,
+      "default_profile_image": false,
+      "id": 102095809,
+      "profile_background_image_url_https": "https://pbs.twimg.com/profile_background_images/462874803716636672/1EpO0CaT.jpeg",
+      "verified": true,
+      "translator_type": "none",
+      "profile_text_color": "3D1957",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/811883254827614208/ORbPdyms_normal.jpg",
+      "profile_sidebar_fill_color": "7AC3EE",
+      "entities": {
+        "url": {
+          "urls": [
+            {
+              "url": "https://t.co/pAWPxq8OUp",
+              "indices": [
+                0,
+                23
+              ],
+              "expanded_url": "http://ajuntament.barcelona.cat/alcaldessa",
+              "display_url": "ajuntament.barcelona.cat/alcaldessa"
+            }
+          ]
+        },
+        "description": {
+          "urls": []
+        }
+      },
+      "followers_count": 490124,
+      "profile_sidebar_border_color": "FFFFFF",
+      "id_str": "102095809",
+      "profile_background_color": "642D8B",
+      "listed_count": 3633,
+      "is_translation_enabled": false,
+      "utc_offset": -28800,
+      "statuses_count": 16498,
+      "description": "Alcaldessa de Barcelona. Perquè estimem aquesta ciutat, guanyem una @bcnencomu!",
+      "friends_count": 1693,
+      "location": "Barcelona",
+      "profile_link_color": "FF0000",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/811883254827614208/ORbPdyms_normal.jpg",
+      "following": true,
+      "geo_enabled": true,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/102095809/1474969294",
+      "profile_background_image_url": "http://pbs.twimg.com/profile_background_images/462874803716636672/1EpO0CaT.jpeg",
+      "screen_name": "AdaColau",
+      "lang": "es",
+      "profile_background_tile": true,
+      "favourites_count": 13335,
+      "name": "Ada Colau",
+      "notifications": false,
+      "url": "https://t.co/pAWPxq8OUp",
+      "created_at": "Tue Jan 05 16:03:01 +0000 2010",
+      "contributors_enabled": false,
+      "time_zone": "Pacific Time (US & Canada)",
+      "protected": false,
+      "default_profile": false,
+      "is_translator": false
+    },
+    "geo": null,
+    "in_reply_to_user_id_str": null,
+    "lang": "und",
+    "created_at": "Fri Feb 17 17:25:19 +0000 2017",
+    "in_reply_to_status_id_str": null,
+    "place": null,
+    "metadata": {
+      "iso_language_code": "und",
+      "result_type": "recent"
+    }
+  }
+}
